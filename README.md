@@ -1,3 +1,5 @@
+![Typescript: orientação a objetos](https://imgur.com/9399vxd.png)
+
 # Typescript: orientação a objetos
 
 Este projeto faz parte da escola Front-end e tem como objetivo ensinar a transformar trechos de código originalmente cosntruídos em programação funcional para programação orientada a objetos, destacando as diferenças entre os dois paradigmas.
@@ -12,7 +14,3 @@ O projeto contará com o desenvolvimento de:
 - Métodos estáticos;
 - Herança de classes;
 - Decorators de validação.
-
-## Para executar o projeto
-- Utilize o comando no terminal `tsc -w` para ativar a auto compilação do TypeScript.
-- No arquivo index.html clique com o botão direito e selecione executar com o Live Server.
