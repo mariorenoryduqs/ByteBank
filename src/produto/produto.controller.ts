@@ -1,0 +1,81 @@
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+  UseInterceptors,
+} from '@nestjs/common';
+import { CacheInterceptor } from '@nestjs/common';
+import { randomUUID } from 'crypto';
+
+import { AtualizaProdutoDTO } from './dto/atualizaProduto.dto';
+import { CriaProdutoDTO } from './dto/CriaProduto.dto';
+import { ProdutoEntity } from './produto.entity';
+import { ProdutoService } from './produto.service';
+
+@Controller('produtos')
+export class ProdutoController {
+  constructor(private readonly produtoService: ProdutoService) { }
+
+  @Post()
+  async criaNovo(@Body() dadosProduto: CriaProdutoDTO) {
+    const produto = new ProdutoEntity();
+
+    produto.id = randomUUID();
+    produto.nome = dadosProduto.nome;
+    produto.usuarioId = dadosProduto.usuarioId;
+    produto.valor = dadosProduto.valor;
+    produto.quantidade = dadosProduto.quantidade;
+    produto.descricao = dadosProduto.descricao;
+    produto.categoria = dadosProduto.categoria;
+    produto.caracteristicas = dadosProduto.caracteristicas;
+    produto.imagens = dadosProduto.imagens;
+
+    const produtoCadastrado = await this.produtoService.criaProduto(
+      produto,
+      dadosProduto.fornecedorId,
+    );
+    return produtoCadastrado;
+  }
+
+  @Get()
+  @UseInterceptors(CacheInterceptor)
+  async listaTodos() {
+    return this.produtoService.listProdutos();
+  }
+
+  /*@Get('/:id')
+  @UseInterceptors(CacheInterceptor)
+  async listaPorId(@Param('id') id: string) {
+    return this.produtoService.listProdutoPorId(id);
+  }
+*/
+  @Put('/:id')
+  async atualiza(
+    @Param('id') id: string,
+    @Body() dadosProduto: AtualizaProdutoDTO,
+  ) {
+    const produtoAlterado = await this.produtoService.atualizaProduto(
+      id,
+      dadosProduto,
+    );
+
+    return {
+      mensagem: 'Produto atualizado com sucesso',
+      produto: produtoAlterado,
+    };
+  }
+
+  @Delete('/:id')
+  async remove(@Param('id') id: string) {
+    const produtoRemovido = await this.produtoService.deletaProduto(id);
+
+    return {
+      mensagem: 'Produto removido com sucesso',
+      produto: produtoRemovido,
+    };
+  }
+}
